@@ -1,21 +1,32 @@
 import 'dart:convert';
 
+import 'package:film_collections_app/context.dart';
+import 'package:film_collections_app/database/database_helper.dart';
+import 'package:film_collections_app/model/movie.dart';
+import 'package:film_collections_app/service/api_service.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 
 class MovieService {
 
-  String _defaultUrl = "https://api.themoviedb.org/3/search/movie?api_key=21d0b60bb605bdf3e0e5ddddc159a83c&query=";
+  DatabaseHelper _database = Context.database;
+  MovieApiService _api = Context.movieApiService;
 
-  /*Future<List<Film>> fetchFilm(String filmName) async {
-    final response = await http.get("$_defaultUrl$filmName");
+  Future<List<Movie>> searchMovies(String text) {
+    return _api.fetchMovies(text);
+  }
 
-    if (response.statusCode == 200) {
-      var films = json.decode(response.body)['results'].map<Film>((s) => Film.fromJson(s)).toList();
-      //print(films);
-      return films;
-    } else {
-      throw Exception('Failed to load films');
-    }
-  }*/
+  Future<Movie> getActualMovie(Movie movie) {
+    print("movie for search, id = ${movie.id}");
+    return _getMovieById(movie.id).then((movieFromDb) {
+       return movieFromDb != null ? movieFromDb : movie;
+    });
+  }
+
+  Future<Movie> _getMovieById(int id) {
+    return _database.get(id).then((movie) {
+      return movie != null ? Movie.fromMap(movie) : null;
+    });
+  }
+
 }

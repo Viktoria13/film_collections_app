@@ -1,7 +1,9 @@
 import 'package:film_collections_app/context.dart';
+import 'package:film_collections_app/database/database_helper.dart';
 import 'package:film_collections_app/model/movie.dart';
 import 'package:film_collections_app/screen/detail/detail.dart';
 import 'package:film_collections_app/service/api_service.dart';
+import 'package:film_collections_app/service/movie_service.dart';
 import 'package:flutter/material.dart';
 
 class SearchPageWidget extends StatefulWidget {
@@ -12,7 +14,9 @@ class SearchPageWidget extends StatefulWidget {
 
 class SearchPageWidgetState extends State<SearchPageWidget> {
 
-  MovieApiService _api = Context.movieApiService;
+  //MovieApiService _api = Context.movieApiService;
+  MovieService _movieService = Context.movieService;
+
   TextEditingController searchFieldController = TextEditingController();
   List<Movie> _movies = [];
 
@@ -31,8 +35,10 @@ class SearchPageWidgetState extends State<SearchPageWidget> {
   _searchMovies() {
     if (searchFieldController.text.length > 0) {
       String title = searchFieldController.text;
-      _api.fetchMovies(title)
+      _movieService.searchMovies(title)
           .then((movies) => _updateMovieList(movies));
+      /*_api.fetchMovies(title)
+          .then((movies) => _updateMovieList(movies));*/
     }
   }
 
@@ -92,8 +98,8 @@ class SearchPageWidgetState extends State<SearchPageWidget> {
         trailing: IconButton(
             icon: Icon(Icons.arrow_forward_ios),
             onPressed: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => DetailsPageWidget(movie: movie)));
+              _movieService.getActualMovie(movie).then((m) => Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => DetailsPageWidget(movie: m))));
             }
         ),
       ),

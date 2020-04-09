@@ -1,4 +1,7 @@
 
+import 'package:film_collections_app/database/constant.dart';
+import 'package:flutter/foundation.dart';
+
 class Movie {
 
   int id;
@@ -25,6 +28,10 @@ class Movie {
     return year.isEmpty ? title : "$title($year)";
   }
 
+  String getDetailRating() {
+    return rating != null ? "$rating/10" : "";
+  }
+
   factory Movie.fromJson(Map<String, dynamic> json) {
     //print("Constructor input json: $json" );
     return Movie(
@@ -34,6 +41,19 @@ class Movie {
       rating: json['vote_average'] as num,
       overview: json['overview'] as String,
       posterPath: json['poster_path'] as String
+    );
+  }
+
+  factory Movie.fromMap(Map<String, dynamic> map) {
+    return Movie(
+      id: map[Constant.columnId],
+      title: map[Constant.columnTitle],
+      year: map[Constant.columnYear],
+      rating: map[Constant.columnRating] ,
+      overview: map[Constant.columnOverview],
+      posterPath: map[Constant.columnPosterPath],
+      watchList: convertIntToBool(map[Constant.columnWatchList]),
+      seen: convertIntToBool(map[Constant.columnSeen])
     );
   }
 
@@ -49,10 +69,26 @@ class Movie {
     return "";
   }
 
+  static bool convertIntToBool(int value) {
+    return value == 1;
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      Constant.columnId: id,
+      Constant.columnTitle: title,
+      Constant.columnYear: year,
+      Constant.columnRating: rating,
+      Constant.columnOverview: overview,
+      Constant.columnPosterPath: posterPath,
+      Constant.columnWatchList: watchList,
+      Constant.columnSeen: seen
+    };
+  }
+
   @override
   toString() {
     return "$id, $title, $year, $rating, $posterPath";
-    return "${this.title}\noverview: ${this.overview}";
   }
 
 }
