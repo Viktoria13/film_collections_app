@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:film_collections_app/context.dart';
 import 'package:film_collections_app/model/movie.dart';
 import 'package:film_collections_app/screen/detail/detail.dart';
@@ -17,24 +19,58 @@ class SearchPageWidgetState extends State<SearchPageWidget> {
   TextEditingController searchFieldController = TextEditingController();
   List<Movie> _movies = [];
 
+
+  // todo bad work
+  Timer _timer;
+  int _start = 0;
+
+  void _startTimer() {
+    _start = 0;
+    const oneSec = const Duration(seconds: 1);
+    _timer = new Timer.periodic(
+      oneSec,
+          (Timer timer) => setState(
+            () {
+              //_start = _start + 1;
+              if (_start > 2) {
+                print("timer: $_start");
+                _start = 0;
+                _searchMovies();
+                timer.cancel();
+              } else {
+                _start = _start + 1;
+              }
+        },
+      ),
+    );
+  }
+
+  void _resetTimer() {
+    _timer.cancel();
+    _start = 0;
+  }
+
   @override
   void initState() {
     super.initState();
-    searchFieldController.addListener(_searchMovies);
+    //searchFieldController.addListener(_searchMovies);
   }
 
   @override
   void dispose() {
     searchFieldController.dispose();
+    _timer.cancel();
     super.dispose();
   }
 
   _searchMovies() {
-    if (searchFieldController.text.length > 0) {
-      String title = searchFieldController.text;
-      _movieService.searchMovies(title)
-          .then((movies) => _updateMovieList(movies));
-    }
+    //if (_start > 2) {
+      if (searchFieldController.text.length > 0) {
+        String title = searchFieldController.text;
+        _movieService.searchMovies(title)
+            .then((movies) => _updateMovieList(movies));
+      }
+    //}
   }
 
   _updateMovieList(List<Movie> movies) {
@@ -57,7 +93,10 @@ class SearchPageWidgetState extends State<SearchPageWidget> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
-                onChanged: (value) {},
+                onChanged: (value) {
+                  //_resetTimer();
+                  _startTimer();
+                },
                 controller: searchFieldController,
                 decoration: InputDecoration(
                     labelText: "Search",

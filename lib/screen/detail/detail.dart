@@ -130,16 +130,6 @@ class DetailsPageWidgetState extends State<DetailsPageWidget> {
         _returnPreviousMovieCategory(widget.movie);
       }
     });
-
-    /*_movieService.saveMovie(widget.movie).then((id) {
-      if (id == widget.movie.id) {
-        _currentMovieCategory = MovieCategory.none;
-        _deleteFromCategory();
-      } else {
-        print("error delete from category");
-        _returnPreviousMovieCategory(widget.movie);
-      }
-    });*/
   }
 
   void _addToWatchCategory() {
