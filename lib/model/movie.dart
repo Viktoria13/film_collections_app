@@ -1,6 +1,5 @@
 
 import 'package:film_collections_app/database/constant.dart';
-import 'package:flutter/foundation.dart';
 
 class Movie {
 
@@ -48,13 +47,26 @@ class Movie {
     return Movie(
       id: map[Constant.columnId],
       title: map[Constant.columnTitle],
-      year: map[Constant.columnYear],
+      year: map[Constant.columnYear].toString(),
       rating: map[Constant.columnRating] ,
       overview: map[Constant.columnOverview],
       posterPath: map[Constant.columnPosterPath],
       watchList: convertIntToBool(map[Constant.columnWatchList]),
       seen: convertIntToBool(map[Constant.columnSeen])
     );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      Constant.columnId: id,
+      Constant.columnTitle: title,
+      Constant.columnYear: year,
+      Constant.columnRating: rating,
+      Constant.columnOverview: overview,
+      Constant.columnPosterPath: posterPath,
+      Constant.columnWatchList: convertBoolToInt(watchList),
+      Constant.columnSeen: convertBoolToInt(seen)
+    };
   }
 
   static String _getYear(Map<String, dynamic> json) {
@@ -73,22 +85,13 @@ class Movie {
     return value == 1;
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      Constant.columnId: id,
-      Constant.columnTitle: title,
-      Constant.columnYear: year,
-      Constant.columnRating: rating,
-      Constant.columnOverview: overview,
-      Constant.columnPosterPath: posterPath,
-      Constant.columnWatchList: watchList,
-      Constant.columnSeen: seen
-    };
+  static int convertBoolToInt(bool value) {
+    return value ? 1 : 0;
   }
 
   @override
   toString() {
-    return "$id, $title, $year, $rating, $posterPath";
+    return "$id, $title, $year, $rating, $posterPath, $watchList, $seen";
   }
 
 }

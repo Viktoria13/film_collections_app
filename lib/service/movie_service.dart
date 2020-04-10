@@ -1,16 +1,16 @@
-import 'dart:convert';
 
-import 'package:film_collections_app/context.dart';
 import 'package:film_collections_app/database/database_helper.dart';
 import 'package:film_collections_app/model/movie.dart';
 import 'package:film_collections_app/service/api_service.dart';
-import 'package:http/http.dart' as http;
 import 'dart:async';
 
 class MovieService {
 
-  DatabaseHelper _database = Context.database;
-  MovieApiService _api = Context.movieApiService;
+  static final MovieApiService _api = new MovieApiService();
+  static final DatabaseHelper _database = DatabaseHelper.instance;
+
+  /*DatabaseHelper _database = Context.database;
+  MovieApiService _api = Context.movieApiService;*/
 
   Future<List<Movie>> searchMovies(String text) {
     return _api.fetchMovies(text);
@@ -27,6 +27,34 @@ class MovieService {
     return _database.get(id).then((movie) {
       return movie != null ? Movie.fromMap(movie) : null;
     });
+  }
+
+  String getPosterUrl(Movie movie) {
+    return _api.getImageUrl(movie.posterPath);
+  }
+
+  Future<int> saveMovie(Movie movie) {
+    return _database.insert(movie.toMap());
+  }
+
+  Future<int> deleteMovie(Movie movie) {
+    return _database.delete(movie.id);
+  }
+  
+  Future<List<Movie>> getWatchList() {
+    return _database.getWatchList().then((mapList) {
+      return mapList.map((movie) => Movie.fromMap(movie)).toList();
+    });
+  }
+  
+  Future<List<Movie>> getSeenList() {
+    return _database.getSeenList().then((mapList) {
+      return mapList.map((movie) => Movie.fromMap(movie)).toList();
+    });
+  }
+
+  void deleteAll() {
+    _database.deleteAll();
   }
 
 }

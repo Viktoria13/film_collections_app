@@ -1,5 +1,6 @@
-import 'package:film_collections_app/model/movie.dart';
+import 'package:film_collections_app/context.dart';
 import 'package:film_collections_app/screen/search/search.dart';
+import 'package:film_collections_app/service/movie_service.dart';
 import 'package:flutter/material.dart';
 
 import 'movie_list_widget.dart';
@@ -11,28 +12,7 @@ class HomePageWidget extends StatefulWidget {
 
 class HomePageWidgetState extends State<HomePageWidget> {
 
-  List<Movie> watched = [
-    new Movie(
-      id: 123123,
-      title: "test1",
-      year: "2030",
-      rating: 5.0,
-      overview: "jkjnkjn",
-      posterPath: "kjnkjn",
-      watchList: false,
-      seen:false
-    ),
-    new Movie(
-        id: 123123,
-        title: "test2",
-        year: "2034",
-        rating: 3.0,
-        overview: "jkjnkjn",
-        posterPath: "kjnkjn",
-        watchList: false,
-        seen:false
-    )
-  ];
+  MovieService movieService = Context.movieService;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +29,6 @@ class HomePageWidgetState extends State<HomePageWidget> {
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) => SearchPageWidget()));
                   },
-                  //onTap: () { Navigator.pushNamed(context, '/search'); },
                   child: Icon(
                     Icons.search,
                     size: 26.0,
@@ -59,8 +38,8 @@ class HomePageWidgetState extends State<HomePageWidget> {
           bottom: TabBar(tabs: [Tab(text: "Watchlist"), Tab(text: "Seen")]),
         ),
         body: TabBarView(children: [
-          MovieListWidget(movies: watched),
-          Text("hello2")
+          MovieListWidget(movies: movieService.getWatchList()),
+          MovieListWidget(movies: movieService.getSeenList())
         ]),
       ),
     );

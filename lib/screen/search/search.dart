@@ -98,6 +98,8 @@ class SearchPageWidgetState extends State<SearchPageWidget> {
         trailing: IconButton(
             icon: Icon(Icons.arrow_forward_ios),
             onPressed: () {
+              movie.watchList = false;
+              movie.seen = false;
               _movieService.getActualMovie(movie).then((m) => Navigator.of(context)
                   .push(MaterialPageRoute(builder: (context) => DetailsPageWidget(movie: m))));
             }
@@ -105,70 +107,4 @@ class SearchPageWidgetState extends State<SearchPageWidget> {
       ),
     );
   }
-
-  /*Widget _movieWidget(Movie movie) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: <Widget>[
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-              movie.getTitleWithYear()
-          ),
-        ),
-        Align(
-          alignment: Alignment.centerRight,
-          child: IconButton(
-              icon: Icon(Icons.arrow_forward_ios),
-              onPressed: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => DetailsPageWidget()));
-              }
-          ),
-        )
-      ],
-    );
-  }
-  }*/
-
-  /*Widget filmsWidget() {
-    return FutureBuilder(
-        future: this._searchFilms(),
-        builder: (context, snapshot) {
-          if (ConnectionState.none == ConnectionState.none &&
-              snapshot.hasData == null) {
-            //print('project snapshot data is: ${projectSnap.data}');
-            return Center(
-              child: Text("Empty"),
-            );
-          }
-
-          return ListView.builder(
-            //shrinkWrap: true,
-              itemCount: snapshot.data == null ? 0 : snapshot.data.length,
-              itemBuilder: (context, index) {
-                Film film = snapshot.data[index];
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                          film.getFilmTitleForSearchList()
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: IconButton(
-                        icon: Icon(Icons.arrow_forward_ios),
-                        onPressed: () => Navigator.pushNamed(context, '/detail'),
-                      ),
-                    )
-                  ],
-                );
-              }
-          );
-        }
-    );
-  }*/
 }

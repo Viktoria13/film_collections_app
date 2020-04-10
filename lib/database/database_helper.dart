@@ -6,8 +6,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelper {
-  static final _databaseName = "MyDatabase.db";
-  static final _databaseVersion = 1;
+  static final _databaseName = "movie_db.db";
+  static final _databaseVersion = 2;
 
   DatabaseHelper._privateConstructor();
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
@@ -37,8 +37,8 @@ class DatabaseHelper {
             ${Constant.columnRating} NUMERIC,
             ${Constant.columnOverview} TEXT,
             ${Constant.columnPosterPath} TEXT,
-            ${Constant.columnWatchList} BOOLEAN,
-            ${Constant.columnSeen} BOOLEAN
+            ${Constant.columnWatchList} INTEGER,
+            ${Constant.columnSeen} INTEGER
           )
           ''');
   }

@@ -9,19 +9,11 @@ class MovieApiService {
 
   static String _defaultSearchMovieUrl = "https://api.themoviedb.org/3/search/movie?api_key=$_apiKey&query=";
 
-  static final String _postersBaseUrl = "https://image.tmdb.org/t/p/";
+  static final String _postersBaseUrl = "https://image.tmdb.org/t/p/w154";
 
-  static final String _smallImagesBaseUrl = "${_postersBaseUrl}w45";
-
-  static final String _largePosterBaseUrl = "${_postersBaseUrl}w154";
-
-  String getSmallImageUrl(String posterPath) => "$_smallImagesBaseUrl$posterPath";
-
-  String getLargeImageUrl(String posterPath) => "$_largePosterBaseUrl$posterPath";
+  String getImageUrl(String posterPath) => "$_postersBaseUrl$posterPath";
 
   String searchMovieByTitleUrl(String title) => "$_defaultSearchMovieUrl$title";
-
-  String getMovieByIdUrl(int id) => "https://api.themoviedb.org/3/movie/$id?api_key=$_apiKey";
 
   Future<List<Movie>> fetchMovies(String query) async {
     print("fetchMovies: query = $query");
@@ -33,7 +25,7 @@ class MovieApiService {
       var list = json.decode(response.body)['results']
           .map<Movie>((json) => Movie.fromJson(json))
           .toList();
-      print("list: $list");
+      //print("list: $list");
       return list;
     } else {
       //return List();
