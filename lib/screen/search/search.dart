@@ -1,8 +1,6 @@
 import 'package:film_collections_app/context.dart';
-import 'package:film_collections_app/database/database_helper.dart';
 import 'package:film_collections_app/model/movie.dart';
 import 'package:film_collections_app/screen/detail/detail.dart';
-import 'package:film_collections_app/service/api_service.dart';
 import 'package:film_collections_app/service/movie_service.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +12,6 @@ class SearchPageWidget extends StatefulWidget {
 
 class SearchPageWidgetState extends State<SearchPageWidget> {
 
-  //MovieApiService _api = Context.movieApiService;
   MovieService _movieService = Context.movieService;
 
   TextEditingController searchFieldController = TextEditingController();
@@ -37,8 +34,6 @@ class SearchPageWidgetState extends State<SearchPageWidget> {
       String title = searchFieldController.text;
       _movieService.searchMovies(title)
           .then((movies) => _updateMovieList(movies));
-      /*_api.fetchMovies(title)
-          .then((movies) => _updateMovieList(movies));*/
     }
   }
 

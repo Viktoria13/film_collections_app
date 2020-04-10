@@ -21,7 +21,6 @@ class MovieApiService {
     final response = await http.get("$_defaultSearchMovieUrl$query");
 
     if (response.statusCode == 200) {
-      print("response 200 OK");
       var list = json.decode(response.body)['results']
           .map<Movie>((json) => Movie.fromJson(json))
           .toList();

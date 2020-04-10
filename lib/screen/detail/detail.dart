@@ -19,6 +19,15 @@ class DetailsPageWidget extends StatefulWidget {
 
 class DetailsPageWidgetState extends State<DetailsPageWidget> {
 
+  @override
+  void dispose() {
+    _firstBtnText = "";
+    _secondBtnText = "";
+    _firstBtnAction = null;
+    _secondBtnAction = null;
+    super.dispose();
+  }
+
   final String _addToWatchListBtnText = "Add to Watch List";
   final String _alreadyWatchedBtnText = "Already Watched";
   final String _deleteBtnText = "Delete";
