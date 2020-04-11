@@ -19,66 +19,39 @@ class SearchPageWidgetState extends State<SearchPageWidget> {
   TextEditingController searchFieldController = TextEditingController();
   List<Movie> _movies = [];
 
-
-  // todo bad work
-  Timer _timer;
-  int _start = 0;
-
-  void _startTimer() {
-    _start = 0;
-    const oneSec = const Duration(seconds: 1);
-    _timer = new Timer.periodic(
-      oneSec,
-          (Timer timer) => setState(
-            () {
-              //_start = _start + 1;
-              if (_start > 2) {
-                print("timer: $_start");
-                _start = 0;
-                _searchMovies();
-                timer.cancel();
-              } else {
-                _start = _start + 1;
-              }
-        },
-      ),
-    );
-  }
-
-  void _resetTimer() {
-    _timer.cancel();
-    _start = 0;
-  }
-
   @override
   void initState() {
     super.initState();
-    //searchFieldController.addListener(_searchMovies);
+    searchFieldController.addListener(_searchMovies);
   }
 
   @override
   void dispose() {
-    searchFieldController.dispose();
-    _timer.cancel();
     super.dispose();
+    searchFieldController.dispose();
   }
 
-  _searchMovies() {
-    //if (_start > 2) {
-      if (searchFieldController.text.length > 0) {
-        String title = searchFieldController.text;
-        _movieService.searchMovies(title)
-            .then((movies) => _updateMovieList(movies));
-      }
-    //}
-  }
+  String _previousSearchText;
 
-  _updateMovieList(List<Movie> movies) {
-    setState(() {
-      if (movies != null) {
-        _movies = movies;
-      }
-    });
+  _searchMovies() async {
+    _previousSearchText = searchFieldController.text;
+    var currentSearchText = searchFieldController.text;
+    await Future.delayed(Duration(seconds: 1));
+
+    if (_previousSearchText != currentSearchText) {
+      return;
+    }
+    if (searchFieldController.text.length > 0) {
+      String title = searchFieldController.text;
+      _movieService.searchMovies(title)
+          .then((movies) {
+            setState(() {
+              if (movies != null) {
+                _movies = movies;
+              }
+            });
+      });
+    }
   }
 
   @override
@@ -93,10 +66,7 @@ class SearchPageWidgetState extends State<SearchPageWidget> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
-                onChanged: (value) {
-                  //_resetTimer();
-                  _startTimer();
-                },
+                onChanged: (value) {},
                 controller: searchFieldController,
                 decoration: InputDecoration(
                     labelText: "Search",
@@ -108,14 +78,11 @@ class SearchPageWidgetState extends State<SearchPageWidget> {
             ),
             Expanded(
               child: ListView.builder(
-                  //padding: const EdgeInsets.all(16.0),
-                //shrinkWrap: true,
                   itemCount: _movies.length,
                   itemBuilder: (context, index) {
                     //if (index.isOdd) return Divider();
                     //final idx = index ~/ 2;
-                    return _buildMovieRow(_movies[index]);
-                    //return MovieSearchItemWidget(movie: _movies[idx]);
+                    return _buildMovieRow(_movies[index], context);
                   }
               ),
             ),
@@ -125,7 +92,7 @@ class SearchPageWidgetState extends State<SearchPageWidget> {
     );
   }
 
-  Widget _buildMovieRow(Movie movie) {
+  Widget _buildMovieRow(Movie movie, BuildContext context) {
     return Card(
       child: ListTile(
         title: Text(movie.getTitleWithYear()),
