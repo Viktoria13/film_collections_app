@@ -102,7 +102,7 @@ class SearchPageWidgetState extends State<SearchPageWidget> {
               movie.watchList = false;
               movie.seen = false;
               _movieService.getActualMovie(movie).then((m) => Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => DetailsPageWidget(movie: m))));
+                  .push(MaterialPageRoute(builder: (context) => DetailsPageWidget(movie: m/*, movieService: Context.movieService*/))));
             }
         ),
       ),

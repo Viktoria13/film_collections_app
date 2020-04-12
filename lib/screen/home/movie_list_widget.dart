@@ -38,7 +38,7 @@ class MovieListWidgetState extends State<MovieListWidget> {
           children: result.map((movie) =>
             GestureDetector(
                 onTap: (){ Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => DetailsPageWidget(movie: movie)));
+                    .push(MaterialPageRoute(builder: (context) => DetailsPageWidget(movie: movie/*, movieService: Context.movieService*/)));
                 },
                 child: Center(
                   child: _buildMovieCard(movie),

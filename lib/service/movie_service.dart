@@ -6,8 +6,13 @@ import 'dart:async';
 
 class MovieService {
 
+  MovieService(DatabaseHelper databaseHelper) {
+    this._database  = databaseHelper;
+  }
+
   static final MovieApiService _api = new MovieApiService();
-  static final DatabaseHelper _database = DatabaseHelper.instance;
+  DatabaseHelper _database;
+  //DatabaseHelper _database = DatabaseHelper.instance;
 
   /*DatabaseHelper _database = Context.database;
   MovieApiService _api = Context.movieApiService;*/
@@ -33,12 +38,50 @@ class MovieService {
     return _api.getImageUrl(movie.posterPath);
   }
 
-  Future<int> saveMovie(Movie movie) {
+  Future<Movie> saveToWatchList(Movie movie) {
+    var previousWatchList = movie.watchList;
+    var previousSeenList = movie.seen;
+    movie.watchList = true;
+    movie.seen = false;
+    return _saveMovie(movie).then((id) {
+      if (id != movie.id) {
+        print("error add to watch list");
+        movie.watchList = previousWatchList;
+        movie.seen = previousSeenList;
+      }
+      return movie;
+    });
+  }
+
+  Future<Movie> saveToSeenList(Movie movie) {
+    var previousWatchList = movie.watchList;
+    var previousSeenList = movie.seen;
+    movie.watchList = false;
+    movie.seen = true;
+    return _saveMovie(movie).then((id) {
+      if (id != movie.id) {
+        print("error add to seen list");
+        movie.watchList = previousWatchList;
+        movie.seen = previousSeenList;
+      }
+      return movie;
+    });
+  }
+
+  Future<int> _saveMovie(Movie movie) {
     return _database.insert(movie.toMap());
   }
 
-  Future<int> deleteMovie(Movie movie) {
-    return _database.delete(movie.id);
+  Future<Movie> deleteMovieFromCategory(Movie movie) {
+    return _database.delete(movie.id).then((affectedRows) {
+      if (affectedRows == 1) {
+        movie.watchList = false;
+        movie.seen = false;
+      } else {
+        print("error delete from category");
+      }
+      return movie;
+    });
   }
   
   Future<List<Movie>> getWatchList() {

@@ -9,9 +9,14 @@ import 'package:flutter/material.dart';
 
 class DetailsPageWidget extends StatefulWidget {
 
+  //DetailsPageWidget({this.movie, this.movieService});
   DetailsPageWidget({Key key, this.movie});
 
+  //MovieService movieService;
+
   Movie movie;
+
+  //static const firstButtonKey = Key('firstButtonKey');
 
   @override
   DetailsPageWidgetState createState() => DetailsPageWidgetState();
@@ -42,9 +47,6 @@ class DetailsPageWidgetState extends State<DetailsPageWidget> {
   var _firstBtnAction;
   var _secondBtnAction;
 
-  bool _previousMovieWatchlist;
-  bool _previousMovieSeen;
-
   void _defineMovieCategory() {
     print("_defineMovieCategory");
     print(widget.movie.toString());
@@ -74,61 +76,29 @@ class DetailsPageWidgetState extends State<DetailsPageWidget> {
     }
   }
 
-  void _savePreviousMovieCategory(Movie movie) {
-    _previousMovieWatchlist = movie.watchList;
-    _previousMovieSeen = movie.seen;
-  }
-
-  void _returnPreviousMovieCategory(Movie movie) {
-    movie.watchList = _previousMovieWatchlist;
-    movie.seen = _previousMovieSeen;
-  }
-
   void _addToWatchCategoryAction() {
-    _savePreviousMovieCategory(widget.movie);
-    widget.movie.watchList = true;
-    widget.movie.seen = false;
-
-    _movieService.saveMovie(widget.movie).then((id) {
-      if (id == widget.movie.id) {
-        _currentMovieCategory = MovieCategory.watch;
-        _addToWatchCategory();
-      } else {
-        print("error add to watch list");
-        _returnPreviousMovieCategory(widget.movie);
-      }
+    print("action");
+    /*widget.*/_movieService.saveToWatchList(widget.movie).then((movie) {
+      print("then action");
+      _currentMovieCategory = MovieCategory.watch;
+      widget.movie = movie;
+      _addToWatchCategory();
     });
   }
 
   void _addToSeenCategoryAction() {
-    _savePreviousMovieCategory(widget.movie);
-    widget.movie.watchList = false;
-    widget.movie.seen = true;
-
-    _movieService.saveMovie(widget.movie).then((id) {
-      if (id == widget.movie.id) {
-        _currentMovieCategory = MovieCategory.seen;
-        _addToSeenCategory();
-      } else {
-        print("error add to seen list");
-        _returnPreviousMovieCategory(widget.movie);
-      }
+    /*widget.*/_movieService.saveToSeenList(widget.movie).then((movie) {
+      _currentMovieCategory = MovieCategory.seen;
+      widget.movie = movie;
+      _addToSeenCategory();
     });
   }
 
   void _deleteFromCategoryAction() {
-    _savePreviousMovieCategory(widget.movie);
-    widget.movie.watchList = false;
-    widget.movie.seen = false;
-
-    _movieService.deleteMovie(widget.movie).then((affectedRows) {
-      if (affectedRows == 1) {
-        _currentMovieCategory = MovieCategory.none;
-        _deleteFromCategory();
-      } else {
-        print("error delete from category");
-        _returnPreviousMovieCategory(widget.movie);
-      }
+    /*widget.*/_movieService.deleteMovieFromCategory(widget.movie).then((movie) {
+      _currentMovieCategory = MovieCategory.none;
+      widget.movie = movie;
+      _deleteFromCategory();
     });
   }
 
@@ -202,7 +172,7 @@ class DetailsPageWidgetState extends State<DetailsPageWidget> {
         padding: EdgeInsets.only(top: 5, left: 10),
         //padding: EdgeInsets.symmetric(horizontal:10, vertical: 5),
         child: CachedNetworkImage(
-          imageUrl: _movieService.getPosterUrl(widget.movie),
+          imageUrl: /*widget.*/_movieService.getPosterUrl(widget.movie),
           placeholder: (context, url) => CircularProgressIndicator(),
           errorWidget: (context, url, error) => Icon(Icons.error),
         ),
@@ -241,6 +211,7 @@ class DetailsPageWidgetState extends State<DetailsPageWidget> {
               child: Align(
                 alignment: Alignment.topLeft,
                 child: OutlineButton(
+                  //key: DetailsPageWidget.firstButtonKey,
                   onPressed: () {
                     _firstBtnAction();
                   },
@@ -253,6 +224,7 @@ class DetailsPageWidgetState extends State<DetailsPageWidget> {
               child: Align(
                 alignment: Alignment.topLeft,
                 child: OutlineButton(
+                  //key: Key('second_btn_key'),
                   onPressed: () {
                     _secondBtnAction();
                   },

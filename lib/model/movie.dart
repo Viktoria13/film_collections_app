@@ -12,6 +12,20 @@ class Movie {
   bool watchList;
   bool seen;
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is Movie &&
+              runtimeType == other.runtimeType &&
+              id == other.id &&
+              title == other.title &&
+              year == other.year &&
+              rating == other.rating &&
+              overview == other.overview &&
+              posterPath == other.posterPath &&
+              watchList == other.watchList &&
+              seen == other.seen;
+
   Movie({
     this.id,
     this.title,
@@ -48,7 +62,7 @@ class Movie {
       id: map[Constant.columnId],
       title: map[Constant.columnTitle],
       year: map[Constant.columnYear].toString(),
-      rating: map[Constant.columnRating] ,
+      rating: map[Constant.columnRating],
       overview: map[Constant.columnOverview],
       posterPath: map[Constant.columnPosterPath],
       watchList: convertIntToBool(map[Constant.columnWatchList]),
